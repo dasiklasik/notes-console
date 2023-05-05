@@ -29,11 +29,29 @@ function list() {
   })
 }
 
+function view(title) {
+  fs.readFile('notes.json', (error, data) => {
+    if (error) return console.error(error.message);
+    const notes = JSON.parse(data);
+    const note = notes.find(note => note.title === title);
+    if (note) {
+      console.log(note.content)
+    } else {
+      console.log('Такой заметки не существует')
+    }
+  })
+}
+
 switch (command) {
   case 'list':
     list();
     break;
   case 'view':
+    if (!title) {
+      console.log('Необходимо ввести заголовок заметки при запуске функции');
+    } else {
+      view(title);
+    }
     break;
   case 'create':
     create(title, content);
