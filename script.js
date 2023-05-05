@@ -42,6 +42,19 @@ function view(title) {
   })
 }
 
+function remove(title) {
+  fs.readFile('notes.json', (error, data) => {
+    if (error) return console.error(error.message);
+    let notes = JSON.parse(data);
+    notes = notes.filter(note => note.title !== title);
+    const json = JSON.stringify(notes);
+    fs.writeFile('notes.json', json, (error) => {
+      if (error) return console.error(error.message);
+      console.log('Заметка удалена');
+    });
+  });
+}
+
 switch (command) {
   case 'list':
     list();
@@ -57,6 +70,11 @@ switch (command) {
     create(title, content);
     break;
   case 'remove':
+    if (!title) {
+      console.log('Необходимо ввести заголовок заметки при запуске функции');
+    } else {
+      remove(title);
+    }
     break;
   default: console.log('Неизвестная команда')
 }
